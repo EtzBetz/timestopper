@@ -328,11 +328,11 @@ export default {
   0% {
     outline: #ff5500 solid 1rem;
   }
-  //50% {
-  //  outline: unset;
-  //}
-  100% {
-    outline: #ff5500 solid 1rem;
+  50% {
+    outline: unset;
   }
+  //100% {
+  //  outline: #ff5500 solid 1rem;
+  //}
 }
 </style>
