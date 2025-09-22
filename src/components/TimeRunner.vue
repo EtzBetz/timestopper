@@ -119,6 +119,7 @@ export default {
     resetStartTime() {
       this.startTime = DateTime.now()
       this.saveStartTime()
+      this.updateTime = true
     },
     resetTeamsData() {
       this.timetable = []
@@ -162,6 +163,7 @@ export default {
     },
     toggleUpdateTime() {
       this.updateTime = !this.updateTime
+      this.elapsedTime = '00:00:00:000'
     }
   }
 }
