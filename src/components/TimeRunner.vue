@@ -50,6 +50,7 @@ export default {
     },
     updateTimer() {
       if (!this.updateTime) return
+      if (this.showTopTeams) return
       const now = DateTime.now()
       const diff = now.diff(this.startTime, ['hours', 'minutes', 'seconds', 'milliseconds'])
       this.elapsedTime = this.getDiffTimeString(diff)
@@ -135,6 +136,7 @@ export default {
       this.startTime = DateTime.fromISO(this.timeInput)
     },
     toggleShowTopTeams() {
+      if (this.timetable.length < 3) return
       this.showTopTeams = !this.showTopTeams
     },
     toggleShowTopTeam3() {
@@ -189,7 +191,8 @@ export default {
       </div>
     </div>
     <p class="time-runner_title" tabindex="1">Aktuelle Zeit:</p>
-    <p class="time-runner_time" @keydown="addTeamTime" tabindex="0">{{ elapsedTime }}</p>
+    <p class="time-runner_time" @keydown="addTeamTime" tabindex="0"
+       :class="{ 'time-runner--stopped': !this.updateTime || this.showTopTeams }">{{ elapsedTime }}</p>
     <div v-if="showTopTeams" class="time-runner_top-teams">
       <span
         class="top-team--1" :class="{ 'top-team--1--display': this.showTopTeam1 }">{{ timetable[0]?.name ?? 'Team 1'
@@ -234,7 +237,7 @@ export default {
   color: #ff1b00;
   border-radius: 10px;
 
-  &:not(:focus) {
+  &:not(:focus):not(.time-runner--stopped) {
     animation: outline-blink 0.3s linear infinite;
   }
 }
