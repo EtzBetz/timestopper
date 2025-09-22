@@ -22,6 +22,7 @@ export default {
     return {
       startTime: null,
       elapsedTime: '',
+      updateTime: true,
       timetable: [],
       timer: null,
       timeInput: '',
@@ -38,7 +39,7 @@ export default {
     this.loadStartTime()
     this.loadTeamsData()
     this.updateTimer()
-    this.timer = setInterval(this.updateTimer, 1)
+    this.timer = setInterval(this.updateTimer, 10)
   },
   beforeUnmount() {
     clearInterval(this.timer)
@@ -48,6 +49,7 @@ export default {
       return Duration
     },
     updateTimer() {
+      if (!this.updateTime) return
       const now = DateTime.now()
       const diff = now.diff(this.startTime, ['hours', 'minutes', 'seconds', 'milliseconds'])
       this.elapsedTime = this.getDiffTimeString(diff)
@@ -157,6 +159,9 @@ export default {
     },
     handleTeamDelete(teamIndex) {
       this.deleteTeamTime(teamIndex)
+    },
+    toggleUpdateTime() {
+      this.updateTime = !this.updateTime
     }
   }
 }
@@ -166,8 +171,9 @@ export default {
   <div class="time-runner" id="timer">
     <div class="time-runner_controls">
       <div class="time-runner_controls_row">
-        start time: <span class="time-runner_controls_start-time">{{ startTime }}</span>
+        <button @click="toggleUpdateTime">toggle time update</button>
         <button @click="resetStartTime">reset starttime</button>
+        start time: <span class="time-runner_controls_start-time">{{ startTime }}</span>
         <span><input type="text" placeholder="yyyy-mm-ddThh:mm:ss.mmm+02:00" size="30" v-model="timeInput">
           <button @click="setManualStartTime">set start time</button></span>
       </div>
