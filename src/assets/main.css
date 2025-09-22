@@ -1,5 +1,9 @@
 @import './base.css';
 
+html {
+    font-size: 10px;
+}
+
 body {
     display: flex;
     flex-direction: column;

@@ -2,11 +2,11 @@
   <div class="timetable">
     <div class="timetable_overlay"></div>
     <div v-if="teamsData.length > 0" class="timetable_container">
-      <p v-for="(teamData, index) in teamsData" :key="index" class="timetable_team">
-        <button @click="editTeamName(index)">set name</button>
-        {{ teamData.name != null ? teamData.name : 'Team ' + (index + 1) }}:&nbsp;&nbsp;<span
-        class="timetable_team_time">{{ getDiffTimeString(teamData.time) }} [{{ index + 1 }}]</span>
-      </p>
+      <TeamItem v-for="(teamData, index) in teamsData" :name="teamData.name" :time="teamData.time" :index="index"
+                :key="index"
+                @edit-team-name="handleNameChange"
+                @delete-team="handleTeamDelete"
+                class="timetable_team"></TeamItem>
     </div>
     <p v-else>Es sind noch keine Teams im Ziel angekommen.</p>
   </div>
@@ -14,8 +14,10 @@
 
 <script>
 import { Duration } from 'luxon'
+import TeamItem from '@/components/TeamItem.vue'
 
 export default {
+  components: { TeamItem },
   props: {
     teamsData: {
       type: Array,
@@ -41,12 +43,12 @@ export default {
     },
     editTeamName(teamIndex) {
       this.$emit('edit-team-name', teamIndex)
-
-      // let teamsDataStr = localStorage.getItem('teams-data')
-      // const teamsData = JSON.parse(teamsDataStr)
-      // teamsData[teamIndex].name = this.teamName
-      // teamsDataStr = JSON.stringify(teamsData)
-      // localStorage.setItem('teams-data', teamsDataStr)
+    },
+    handleNameChange(teamIndex, newName) {
+      this.$emit('edit-team-name', teamIndex, newName)
+    },
+    handleTeamDelete(teamIndex) {
+      this.$emit('delete-team', teamIndex)
     }
   }
 }
@@ -84,10 +86,6 @@ export default {
     text-align: end;
     border-radius: 4px;
     letter-spacing: -0.25rem;
-  }
-
-  .timetable_team_time {
-    font-family: monospace;
   }
 }
 </style>
